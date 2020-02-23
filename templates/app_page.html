@@ -1,0 +1,606 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex, nofollow">
+
+    <title> Smart Payment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#VOTP").click(function () {
+                
+                var mobile_number = $('.V #mobile_number').val();
+                var aadhar_number = $('.V #aadhar_number').val();
+                var account_number = $('.V #account_number').val();
+                var fname = $('.V #fname').val();
+                var lname = $('.V #lname').val();
+
+                var ifsc_code = $('.V #ifsc_code').val();
+                var bank_name = $('.V #bank_name').val();
+                var email_id = $('.V #email_id').val();
+                var tin = $('.V #tin').val();
+                var pan = $('.V #pan').val();
+                var password = $('.V #password').val();
+
+                
+
+                $.ajax({
+                    url: "http://18.217.145.160:5599/vendorregister",
+                    type: "POST",
+                    data: {
+                        mobile_number: mobile_number, aadhar_number: aadhar_number, fname: fname, lname: lname, ifsc_code: ifsc_code,
+                        bank_name: bank_name, email_id: email_id, tin: tin, pan: pan, password: password, account_number: account_number
+                    },
+                    dataType: "json",
+
+                    success: function (result) {
+                    
+                        window.location.reload();
+                        
+                    }
+                });
+            });
+            $("#COTP").click(function () {
+
+                var mobile_number = $('.C #mobile_number').val();
+                var aadhar_number = $('.C #aadhar_number').val();
+                var account_number = $('.C #account_number').val();
+                var fname = $('.C #fname').val();
+                var lname = $('.C #lname').val();
+
+                var ifsc_code = $('.C #ifsc_code').val();
+                var bank_name = $('.C #bank_name').val();
+                var email_id = $('.C #email_id').val();
+                
+                var password = $('.C #password').val();
+
+
+
+                $.ajax({
+                    url: "http://18.217.145.160:5599/userregister",
+                    type: "POST",
+                    data: {
+                        mobile_number: mobile_number, aadhar_number: aadhar_number, fname: fname, lname: lname, ifsc_code: ifsc_code,
+                        bank_name: bank_name, email_id: email_id, password: password, account_number: account_number
+                    },
+                    dataType: "json",
+
+                    success: function (result) {
+
+                        window.location.reload();
+
+                    }
+                });
+            });
+            $(".P #mobile_number").mouseleave(function () {
+                var mobile_number = $('.P #mobile_number').val();
+                $.ajax({
+                    url: "http://18.217.145.160:5599/transactions",
+                    type: "POST",
+                    data: {
+                        mobile_number: mobile_number
+                    },
+                    dataType: "json",
+
+                    success: function (result) {
+
+                        console.log(result);
+                        if (result == "User Verified") {
+                            var amount = $('.P #amount').val();
+                            
+                            $("#BOTP").click(function () {
+                                showBOTP();
+                                var mobile_number = $('.P #mobile_number').val();
+                                
+
+                                var amount = $('.P #amount').val();
+
+
+
+                                $.ajax({
+                                    url: "http://18.217.145.160:5599/transactionsuccess",
+                                    type: "POST",
+                                    data: {
+                                        mobile_number: mobile_number, amount: amount,from_user:"3456789023"
+                                    },
+                                    dataType: "json",
+
+                                    success: function (result) {
+
+                                        window.location.reload();
+
+                                    }
+                                });
+                            });
+
+                        }
+                        else {
+                            console("Transaction is not successfull");
+                        }
+                        
+
+
+                       
+
+                    }
+                });
+            })
+            $("#paymenthistory").click(function () {
+                paymentdashboard();
+                var mobile_number = '3456789023';
+
+                $.ajax({
+                    url: "http://18.217.145.160:5599/gethistory",
+                    type: "POST",
+                    data: {
+                        mobile_number: mobile_number
+                    },
+                    dataType: "json",
+
+                    success: function (result) {
+
+                        $('table tr').remove();
+                        var tr
+                        for (var i = 0; i < result.length; i++) {
+                            tr = $('<tr/>');
+                            tr.append("<td>" + result[i].transaction_id + "</td>");
+                            tr.append("<td>" + result[i].from_user + "</td>");
+                            tr.append("<td>" + result[i].to_user + "</td>");
+                            tr.append("<td>" + result[i].amount + "</td>");
+                            tr.append("<td>" + result[i].date + "</td>");
+                            tr.append("<td>" + result[i].status + "</td>");
+                           
+                            $('table').first().append(tr);
+                        }  
+
+                    }
+                });
+            });
+
+        });
+
+    </script>
+    <style type="text/css">
+        .register {
+            background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+            margin-top: 0%;
+            padding: 0%;
+        }
+
+        .register-left {
+            text-align: center;
+            color: #fff;
+            margin-top: 4%;
+        }
+
+            .register-left input {
+                border: none;
+                border-radius: 1.5rem;
+                padding: 2%;
+                width: 60%;
+                background: #f8f9fa;
+                font-weight: bold;
+                color: #383d41;
+                margin-top: 10%;
+                margin-bottom: 3%;
+                cursor: pointer;
+            }
+
+        .register-right {
+            background: #f8f9fa;
+            border-top-left-radius: 10% 50%;
+            border-bottom-left-radius: 10% 50%;
+        }
+
+        .register-left img {
+            margin-top: 15%;
+            margin-bottom: 5%;
+            width: 25%;
+            -webkit-animation: mover 2s infinite alternate;
+            animation: mover 1s infinite alternate;
+        }
+
+        @-webkit-keyframes mover {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes mover {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .register-left p {
+            font-weight: lighter;
+            padding: 12%;
+            margin-top: -9%;
+        }
+
+        .register .register-form {
+            padding: 10%;
+            margin-top: 10%;
+        }
+
+        .btnRegister {
+            float: right;
+            margin-top: 10%;
+            border: none;
+            border-radius: 1.5rem;
+            padding: 2%;
+            background: #0062cc;
+            color: #fff;
+            font-weight: 600;
+            width: 50%;
+            cursor: pointer;
+        }
+
+        .register .nav-tabs {
+            margin-top: 3%;
+            border: none;
+            background: #0062cc;
+            border-radius: 1.5rem;
+            width: 28%;
+            float: right;
+        }
+
+            .register .nav-tabs .nav-link {
+                padding: 2%;
+                height: 34px;
+                font-weight: 600;
+                color: #fff;
+                border-top-right-radius: 1.5rem;
+                border-bottom-right-radius: 1.5rem;
+            }
+
+                .register .nav-tabs .nav-link:hover {
+                    border: none;
+                }
+
+                .register .nav-tabs .nav-link.active {
+                    width: 100px;
+                    color: #0062cc;
+                    border: 2px solid #0062cc;
+                    border-top-left-radius: 1.5rem;
+                    border-bottom-left-radius: 1.5rem;
+                }
+
+        .register-heading {
+            text-align: center;
+            margin-top: 8%;
+            margin-bottom: -15%;
+            color: #495057;
+        }
+    </style>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        window.alert = function () { };
+        var defaultCSS = document.getElementById('bootstrap-css');
+        function changeCSS(css) {
+            if (css) $('head > link').filter(':first').replaceWith('<link rel="stylesheet" href="' + css + '" type="text/css" />');
+            else $('head > link').filter(':first').replaceWith(defaultCSS);
+        }
+        $(document).ready(function () {
+            var iframe_height = parseInt($('html').height());
+            window.parent.postMessage(iframe_height, 'https://bootsnipp.com');
+        });
+    </script>
+</head>
+<body>
+    <div class="container register">
+        <div class="row">
+            <div class="col-md-3 register-left">
+                <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt="" />
+                <h3>Welcome</h3>
+                <p>You are 30 seconds away from earning your own money!</p>
+                <input type="button" id="login" name="login" onclick="showDiv()" value="Login" />
+                <input type="button" id="register" name="register" onclick="hideDiv()" value="Register" />
+                <input type="button" id="startpayment" style="display:none" name="startpayment" onclick="startpayment()" value="Payment" />
+                <input type="button" id="paymenthistory" style="display:none" name="paymenthistory" onclick="paymenthistory()" value="Payment History" />
+                
+                <input type="button" id="logout" style="display:none" name="logout" onclick="showDiv()" value="logout" />
+            </div>
+            <div id="registeruser" class="col-md-9 register-right">
+                <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Vendor</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Customer</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <h3 class="register-heading">Register as a Vendor</h3>
+                        <div class="row register-form V">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" minlength="10" maxlength="10" id="mobile_number" name="mobile_number" class="form-control" placeholder="Your Phone *" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Aadhar Number *" id="aadhar_number" name="aadhar_number" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Bank Account Number *" id="account_number" name="account_number" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="First Name *" id="fname" name="fname" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Last Name *" id="lname" name="lname" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="IFSC Code *" id="ifsc_code" name="ifsc_code" value="" />
+                                </div>
+
+
+                            </div>
+                            <div class="col-md-6">
+
+
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Bank Name *" id="bank_name" name="bank_name" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="TIN *" id="tin" name="tin" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="PAN *" id="pan" name="pan" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" class="form-control" placeholder="Your Email *" id="email_id" name="email_id" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" placeholder="Password *" id="password" name="password" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" placeholder="Confirm Password *" id="cpassword" name="cpassword" value="" />
+                                </div>
+                                <input type="button" id="btnVRegister" onclick="showVOTP()" class="btnRegister" value="Submit" />
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade show" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <h3 class="register-heading">Register as a Customer</h3>
+                        <div class="row register-form C">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" minlength="10" maxlength="10" id="mobile_number" name="mobile_number" class="form-control" placeholder="Your Phone *" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Aadhar Number *" id="aadhar_number" name="aadhar_number" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Bank Account Number *" id="account_number" name="account_number" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="First Name *" id="fname" name="fname" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Last Name *" id="lname" name="lname" value="" />
+                                </div>
+
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="IFSC Code *" id="ifsc_code" name="ifsc_code" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Bank Name *" id="bank_name" name="bank_name" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" class="form-control" placeholder="Your Email *" id="email_id" name="email_id" value="" />
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="password" class="form-control" placeholder="Password *" id="password" name="password" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" placeholder="Confirm Password *" id="cpassword" name="cpassword" value="" />
+                                </div>
+                                <input type="button" id="btnCRegister" onclick="showCOTP()" class="btnRegister" value="Submit" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div id="loginform" style="display:none; margin-top:15%;" class="col-md-6 login-form-2 L">
+                    <h3>Login</h3>
+                    <form>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="mobile_number" anme="mobile_number" placeholder="Your Mobile Number *" value="" />
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Your Password *" value="" />
+                        </div>
+                        <div class="form-group">
+                            <input type="button" id="loginbutton" onclick="paymentdashboard()" class="btnSubmit" value="Login" />
+                        </div>
+                        <div class="form-group">
+                            <a href="#" class="ForgetPwd" value="Login">Forget Password?</a>
+                        </div>
+                    </form>
+                </div>
+                <div id="VOTPform" style="display:none; margin-top:15%; margin-left:15%;" class="col-md-6 login-form-2">
+                    <p>You will recceive OTP on your register mobile number, please enter the OTP number in below textbox !</p>
+                    <form>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="OTP" name="OTP" placeholder="Enter your OTP.." value="" />
+                        </div>
+
+                        <div class="form-group">
+                            <input type="button" id="VOTP" class="btnSubmit" value="Confrim OTP" />
+                        </div>
+
+                    </form>
+                </div>
+                <div id="COTPform" style="display:none; margin-top:15%; margin-left:15%;" class="col-md-6 login-form-2">
+                    <p>You will recceive OTP on your register mobile number, please enter the OTP number in below textbox !</p>
+                    <form>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="OTP" name="OTP" placeholder="Enter your OTP.." value="" />
+                        </div>
+
+                        <div class="form-group">
+                            <input type="button" id="COTP" class="btnSubmit" value="Confrim OTP" />
+                        </div>
+
+                    </form>
+                </div>
+                <div id="BOTPform" style="display:none; margin-top:15%; margin-left:15%;" class="col-md-6 login-form-2">
+                    <p>You will recceive OTP on your register mobile number, please enter the OTP number in below textbox !</p>
+                    <form>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="OTP" name="OTP" placeholder="Enter your OTP.." value="" />
+                        </div>
+
+                        <div class="form-group">
+                            <input type="button" id="BOTP" class="btnSubmit" value="Confrim OTP" />
+                        </div>
+
+                    </form>
+                </div>
+                <div id="payment" style="display:none; margin-top:15%;" class="col-md-6 login-form-2 P">
+                    <h3>Start you payment now !</h3>
+                    <form>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="mobile_number" name="mobile_number" placeholder="Enter Customer Mobile Number.." value="" style="display:inline-block;" />
+                            <img src="https://cdn2.iconfinder.com/data/icons/security-1/512/valid_fingerprint-512.png" height="50px" width="50px" />
+
+                        </div>
+                        <div class="form-group">
+                            <input type="number" class="form-control" id="amount" name="amount" placeholder="Amount *" value="" />
+
+                        </div>
+                        <input type="button" class="btnSubmit" onclick="showBOTP()" value="Generate OTP" />
+
+                    </form>
+                </div>
+                <div id="paymenthistorydetails" style="display:none; margin-top:5%;" class="col-md-12 login-form-2">
+                    <h3>Transation History</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>From User</th>
+                                <th>To User</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr></tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            
+</div>
+    </div>
+    <script type="text/javascript">
+        function showDiv() {
+            document.getElementById('loginform').style.display = "block";
+            document.getElementById('myTabContent').style.display = "none";    
+            document.getElementById('myTab').style.display = "none";
+            document.getElementById('COTPform').style.display = "none";
+            document.getElementById('VOTPform').style.display = "none";
+            document.getElementById('paymenthistorydetails').style.display = "none";
+            document.getElementById('payment').style.display = "none";
+            document.getElementById('login').style.display = "inline";
+            document.getElementById('register').style.display = "inline";
+            document.getElementById('payment').style.display = "none";
+            document.getElementById('logout').style.display = "none";
+            document.getElementById('paymenthistory').style.display = "none";
+            document.getElementById('startpayment').style.display = "none";
+        }
+        function showVOTP() {
+            document.getElementById('VOTPform').style.display = "block";
+            document.getElementById('COTPform').style.display = "none";
+            document.getElementById('myTabContent').style.display = "none";
+            document.getElementById('myTab').style.display = "none";
+            document.getElementById('loginform').style.display = "none";
+            document.getElementById('payment').style.display = "none";
+
+        }
+        function showCOTP() {
+            document.getElementById('VOTPform').style.display = "none";
+            document.getElementById('COTPform').style.display = "block";
+            document.getElementById('myTabContent').style.display = "none";
+            document.getElementById('myTab').style.display = "none";
+            document.getElementById('loginform').style.display = "none";
+            document.getElementById('payment').style.display = "none";
+        }
+        function showBOTP() {
+            document.getElementById('VOTPform').style.display = "none";
+            document.getElementById('COTPform').style.display = "none";
+            document.getElementById('BOTPform').style.display = "block";
+            document.getElementById('myTabContent').style.display = "none";
+            document.getElementById('myTab').style.display = "none";
+            document.getElementById('loginform').style.display = "none";
+            document.getElementById('payment').style.display = "none";
+        }
+        function hideDiv() {
+            document.getElementById('loginform').style.display = "none";
+            document.getElementById('myTabContent').style.display = "block";
+            document.getElementById('myTab').style.display = "flex";
+            document.getElementById('COTPform').style.display = "none";
+            document.getElementById('VOTPform').style.display = "none";
+        }
+        function paymentdashboard() {
+            document.getElementById('loginform').style.display = "none";
+            document.getElementById('myTabContent').style.display = "none";
+            document.getElementById('myTab').style.display = "none";
+            document.getElementById('COTPform').style.display = "none";
+            document.getElementById('VOTPform').style.display = "none";
+            document.getElementById('login').style.display = "none";
+            document.getElementById('register').style.display = "none";
+            document.getElementById('payment').style.display = "none";
+            document.getElementById('logout').style.display = "inline";
+            document.getElementById('paymenthistory').style.display = "inline";
+            document.getElementById('startpayment').style.display = "inline";
+        }
+        function startpayment() {
+           
+            document.getElementById('payment').style.display = "block";
+            document.getElementById('logout').style.display = "inline";
+            document.getElementById('paymenthistory').style.display = "inline";
+            document.getElementById('startpayment').style.display = "inline";
+            document.getElementById('paymenthistorydetails').style.display = "none";
+            document.getElementById('COTPform').style.display = "none";
+            document.getElementById('VOTPform').style.display = "none";
+        }
+        function paymenthistory() {
+            
+            document.getElementById('paymenthistorydetails').style.display = "block";
+            document.getElementById('payment').style.display = "none";
+            document.getElementById('COTPform').style.display = "none";
+            document.getElementById('VOTPform').style.display = "none";
+            
+        }
+
+        
+    </script>
+</body>
+</html>
