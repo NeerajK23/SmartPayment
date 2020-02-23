@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -11,7 +11,7 @@
     <script>
         $(document).ready(function () {
             $("#VOTP").click(function () {
-                
+
                 var mobile_number = $('.V #mobile_number').val();
                 var aadhar_number = $('.V #aadhar_number').val();
                 var account_number = $('.V #account_number').val();
@@ -25,10 +25,10 @@
                 var pan = $('.V #pan').val();
                 var password = $('.V #password').val();
 
-                
+
 
                 $.ajax({
-                    url: "http://18.217.145.160:5599/vendorregister",
+                    url: "http://40.76.104.133/vendorregister",
                     type: "POST",
                     data: {
                         mobile_number: mobile_number, aadhar_number: aadhar_number, fname: fname, lname: lname, ifsc_code: ifsc_code,
@@ -37,9 +37,9 @@
                     dataType: "json",
 
                     success: function (result) {
-                    
+
                         window.location.reload();
-                        
+
                     }
                 });
             });
@@ -54,13 +54,13 @@
                 var ifsc_code = $('.C #ifsc_code').val();
                 var bank_name = $('.C #bank_name').val();
                 var email_id = $('.C #email_id').val();
-                
+
                 var password = $('.C #password').val();
 
 
 
                 $.ajax({
-                    url: "http://18.217.145.160:5599/userregister",
+                    url: "http://40.76.104.133/userregister",
                     type: "POST",
                     data: {
                         mobile_number: mobile_number, aadhar_number: aadhar_number, fname: fname, lname: lname, ifsc_code: ifsc_code,
@@ -78,7 +78,7 @@
             $(".P #mobile_number").mouseleave(function () {
                 var mobile_number = $('.P #mobile_number').val();
                 $.ajax({
-                    url: "http://18.217.145.160:5599/transactions",
+                    url: "http://40.76.104.133/transactions",
                     type: "POST",
                     data: {
                         mobile_number: mobile_number
@@ -90,18 +90,18 @@
                         console.log(result);
                         if (result == "User Verified") {
                             var amount = $('.P #amount').val();
-                            
+
                             $("#BOTP").click(function () {
                                 showBOTP();
                                 var mobile_number = $('.P #mobile_number').val();
-                                
+
 
                                 var amount = $('.P #amount').val();
 
 
 
                                 $.ajax({
-                                    url: "http://18.217.145.160:5599/transactionsuccess",
+                                    url: "http://40.76.104.133/transactionsuccess",
                                     type: "POST",
                                     data: {
                                         mobile_number: mobile_number, amount: amount,from_user:"3456789023"
@@ -120,10 +120,10 @@
                         else {
                             console("Transaction is not successfull");
                         }
-                        
 
 
-                       
+
+
 
                     }
                 });
@@ -133,7 +133,7 @@
                 var mobile_number = '3456789023';
 
                 $.ajax({
-                    url: "http://18.217.145.160:5599/gethistory",
+                    url: "http://40.76.104.133/gethistory",
                     type: "POST",
                     data: {
                         mobile_number: mobile_number
@@ -152,9 +152,9 @@
                             tr.append("<td>" + result[i].amount + "</td>");
                             tr.append("<td>" + result[i].date + "</td>");
                             tr.append("<td>" + result[i].status + "</td>");
-                           
+
                             $('table').first().append(tr);
-                        }  
+                        }
 
                     }
                 });
@@ -310,7 +310,7 @@
                 <input type="button" id="register" name="register" onclick="hideDiv()" value="Register" />
                 <input type="button" id="startpayment" style="display:none" name="startpayment" onclick="startpayment()" value="Payment" />
                 <input type="button" id="paymenthistory" style="display:none" name="paymenthistory" onclick="paymenthistory()" value="Payment History" />
-                
+
                 <input type="button" id="logout" style="display:none" name="logout" onclick="showDiv()" value="logout" />
             </div>
             <div id="registeruser" class="col-md-9 register-right">
@@ -515,14 +515,14 @@
                     </table>
                 </div>
             </div>
-            
-            
+
+
 </div>
     </div>
     <script type="text/javascript">
         function showDiv() {
             document.getElementById('loginform').style.display = "block";
-            document.getElementById('myTabContent').style.display = "none";    
+            document.getElementById('myTabContent').style.display = "none";
             document.getElementById('myTab').style.display = "none";
             document.getElementById('COTPform').style.display = "none";
             document.getElementById('VOTPform').style.display = "none";
@@ -582,7 +582,7 @@
             document.getElementById('startpayment').style.display = "inline";
         }
         function startpayment() {
-           
+
             document.getElementById('payment').style.display = "block";
             document.getElementById('logout').style.display = "inline";
             document.getElementById('paymenthistory').style.display = "inline";
@@ -592,15 +592,15 @@
             document.getElementById('VOTPform').style.display = "none";
         }
         function paymenthistory() {
-            
+
             document.getElementById('paymenthistorydetails').style.display = "block";
             document.getElementById('payment').style.display = "none";
             document.getElementById('COTPform').style.display = "none";
             document.getElementById('VOTPform').style.display = "none";
-            
+
         }
 
-        
+
     </script>
 </body>
 </html>
